@@ -8,59 +8,19 @@ on:
         description: 'JDK Version'
         type: string
         default: '17'
-      debug_mode:
-        description: 'Enable Debug Mode'
-        type: string
-        default: 'true'    
-      oci_reg_host:
-        description: 'OCI Registry Username'
-        type: string
-        default: 'docker.io'    
-      oci_reg_user:
-        description: 'OCI Registry Username'
-        type: string
-        required: true
-      docker_image_push_prefix:
-        description: 'Docker Image Push Prefix'
-        type: string
-        required: true
-      gitops_repository:
-        description: 'GitOps Repository '
-        type: string
-        default: 'github.com/dox-cli-demo/dox-gitops-argocd.git'         
-    secrets:
-      oci_reg_password:
-        description: 'OCI Registry Password'
-        required: true
-      gitops_pat:
-        description: 'Personal Access Token for Github'
-        required: true
 
 jobs:
   cicd:
     runs-on: ubuntu-latest
     env:
       JDK_VERSION: ${{ inputs.jdk_version }}
-      DEBUG_MODE: ${{ inputs.debug_mode }}
-      DOCKER_IMAGE_PUSH_PREFIX: ${{ inputs.docker_image_push_prefix }}
-      OCI_REG_HOST: ${{ inputs.oci_reg_host }}
-      OCI_REG_USER: ${{ inputs.oci_reg_user }}
-      OCI_REG_PASSWORD: ${{ secrets.oci_reg_password }}
-      GITOPS_REPO: ${{ inputs.gitops_repository }}
-      GITOPS_PAT: ${{ secrets.gitops_pat }}
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v3
 
-      - name: Install DOX CLI
-        run: |
-          curl -s -L -o install.sh https://github.com/dopxlab/dox-cli/releases/latest/download/install.sh && bash install.sh
-          cp $HOME/.dox/bin/* /usr/local/bin/
-
       - name: Maven Build
         run: |
-          dox configure maven
-          mvn clean install
+          dox maven build
 
       - name: Docker Build & Push
         run: |
