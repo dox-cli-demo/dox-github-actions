@@ -20,9 +20,10 @@ jobs:
 
       - name: Maven Build
         run: dox maven build
-
-      - name: Docker Build & Push
-        run: dox docker buildx-build
+      
+      #Use 'dox docker buildx-build' for cached build
+      - name: Docker Build & Push 
+        run: dox docker build push 
 
       - name: GitOps Deploy
         run: dox gitops update-image-tag
