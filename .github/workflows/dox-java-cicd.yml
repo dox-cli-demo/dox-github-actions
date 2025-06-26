@@ -22,7 +22,7 @@ jobs:
         run: dox maven build
 
       - name: Docker Build & Push
-        run: dox docker build push
+        run: dox docker buildx-build
 
       - name: GitOps Deploy
         run: dox gitops update-image-tag
